@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:10:23 by agaley            #+#    #+#             */
-/*   Updated: 2023/03/11 00:25:48 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/03/11 01:06:12 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #ifndef MINITALK_H
 # define MINITALK_H
 
+# include <signal.h>
 # include "libft/libft.h"
 
 #endif

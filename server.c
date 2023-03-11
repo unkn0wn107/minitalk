@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:06:21 by agaley            #+#    #+#             */
-/*   Updated: 2023/03/11 00:25:36 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/03/11 01:09:46 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@
 // client.
 // • Unicode characters support!
 
-# include "minitalk.h"
+#include "minitalk.h"
 
 int	main(void)
 {
-
+	ft_printf("Ready to talk with client, PID = %d\n", getpid());
 }

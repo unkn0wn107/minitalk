@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/07/20 17:24:11 by agaley            #+#    #+#              #
-#    Updated: 2023/03/11 00:44:43 by agaley           ###   ########lyon.fr    #
+#    Created: 2023/03/11 00:01:07 by agaley            #+#    #+#              #
+#    Updated: 2023/03/11 01:18:08 by agaley           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ CLT = client
 SRCS = server.c
 SRCC = client.c
 
+LIBFT = libft/libft.a
 LIBFT_FLAGS = -Llibft -lft
 MAKE_LIBFT = make -C libft
 MAKEFLAGS += --no-print-directory
@@ -28,20 +29,20 @@ CC = gcc
 
 all:	${SRV} ${CLT}
 
-libft:
+${LIBFT}:
 		$(MAKE_LIBFT)
 
-${OBS}:	${H} Makefile libft
-		${CC} ${CFLAGS} ${LIBFT_FLAGS} ${SRCS} -c
+${OBS}:	${SRCS} ${H} ${LIBFT} Makefile 
+		${CC} ${CFLAGS} ${SRCS} -c
 
 ${SRV}: ${OBS}
-		${CC} ${CFLAGS} ${OBS} -o ${SRV}
+		${CC} ${CFLAGS} ${OBS} -o ${SRV} ${LIBFT_FLAGS} 
 
-${OBC}:	${H} Makefile libft
-		${CC} ${CFLAGS} ${LIBFT_FLAGS} ${SRCS} -c
+${OBC}:	${SRCC} ${H} ${LIBFT} Makefile
+		${CC} ${CFLAGS} ${SRCC} -c
 
 ${CLT}: ${OBC}
-		${CC} ${CFLAGS} ${OBC} -o ${CLT}
+		${CC} ${CFLAGS} ${OBC} -o ${CLT} ${LIBFT_FLAGS}
 
 clean:
 		$(MAKE_LIBFT) $@
