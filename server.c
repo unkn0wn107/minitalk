@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:06:21 by agaley            #+#    #+#             */
-/*   Updated: 2023/03/11 01:09:46 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/03/11 01:50:35 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,11 @@
 int	main(void)
 {
 	ft_printf("Ready to talk with client, PID = %d\n", getpid());
+	while (1)
+	{
+		pause(); // wait for signal to reach server
+		print_msg();
+		notify_client();
+	}
+	return (0);
 }
