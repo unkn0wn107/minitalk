@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:06:21 by agaley            #+#    #+#             */
-/*   Updated: 2023/04/15 19:54:50 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/04/30 22:09:24 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,76 +34,91 @@
 // • Unicode characters support!
 
 #include "minitalk.h"
-#include <time.h>
 
-static void	print_msg(unsigned char *utfbin)
+static void	clean_byte(unsigned char *byte, size_t len)
 {
-	size_t			len;
-	size_t			i;
-	size_t			j;
-	unsigned char	utf[5];
-	unsigned char	bin8[9];
+	size_t	i;
 
-	len = ft_ustrlen(utfbin);
-	ft_printf("len - %d\n", len);
 	i = 0;
-	while (i < 4)
-	{
-		if (8 * i > len)
-			i = 4;
-		else
-		{
-			j = 0;
-			while (j < 8)
-			{
-				bin8[j] = utfbin[8 * i + j];
-				j++;
-			}
-			ft_printf("utfbin - %s\n", bin8);
-			utf[i++] = ft_btoi(bin8);
-		}
-	}
-	printf("utf - %s\n", utf);
+	while (i < len)
+		byte[i++] = '\0';
 }
 
-static void	handler(int signum)
+static void	receive_byte(unsigned char *byte, int signum)
 {
-	static unsigned char	utfbin[33];
-	size_t			l;
-	size_t			i;
+	size_t	l;
 
-     clock_t start, end;
-     double time_taken;
-
-	l = ft_ustrlen(utfbin);
-	if (l == 32 || ((l == 8 || l == 16 || l == 24) && signum == SIGUSR1))
-	{
-		start = clock();
-		print_msg(utfbin);
-		end = clock();
-     	time_taken = ((double) (end - start)) / CLOCKS_PER_SEC;
-		printf("fun() took %f seconds to execute \n", time_taken);
-		i = 0;
-		while (i < 33)
-		{
-			utfbin[i] = 0;
-			i++;
-		}
-	}
-	l = ft_ustrlen(utfbin);
+	l = ft_ustrlen(byte);
 	if (signum == SIGUSR1)
-		utfbin[l] = '0';
+		byte[l] = '0';
 	else if (signum == SIGUSR2)
-		utfbin[l] = '1';
+		byte[l] = '1';
+}
+
+static void	set_length(t_buff *buff, int signum)
+{
+	size_t	l;
+
+	l = ft_ustrlen(buff->byte);
+	if (l == 32)
+	{
+		ft_printf("len: %s\n", buff->byte);
+		buff->len = ft_btoi32(buff->byte);
+		ft_printf("len: %d\n", buff->len);
+		buff->str = (unsigned char *)malloc(sizeof(unsigned char) * buff->len + 1);
+		ft_bzero(buff->str, buff->len + 1);
+		clean_byte(buff->byte, 33);
+		return ;
+	}
+	receive_byte(buff->byte, signum);
+}
+
+static void	handler(int signum, siginfo_t *info, void *context)
+{
+	static t_stack	*stack;
+	t_buff			*buff;
+	size_t			msglen;
+
+	(void)context;
+	if (!stack)
+		stack = stack_init();
+	if (!stack)
+		ft_printf("Stack initialization error");
+	buff = ft_getbuff(stack, info->si_pid);
+	ft_printf("Buffer initialized\n");
+	if (!buff)
+		ft_printf("Buffer initialization error");
+	if (!buff->str)
+		set_length(buff, signum);
+	// ft_printf("%d\n", l);
+	// if (l == 32 || ((l == 8 || l == 16 || l == 24) && signum == SIGUSR1))
+	msglen = ft_ustrlen(buff->str);
+	if (msglen == buff->len)
+	{
+		ft_printf("%s\n", buff->str);
+		ft_cleanbuff(buff);
+		return ;
+	}
+	receive_byte(buff->byte, signum);
+	if (ft_ustrlen(buff->byte) == 8)
+	{
+		buff->str[msglen] = ft_btouchar(buff->byte);
+		clean_byte(buff->byte, 9);
+	}
+	kill(info->si_pid, SIGUSR1);
+	// ft_printf("Pong to %d\n", info->si_pid);
 }
 
 static void	receive_signals()
 {
 	struct sigaction sa;
 
-	sa.sa_handler = handler;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_SIGINFO; /* Restart functions if interrupted by handler */
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = &handler;
+	// sigemptyset(&sa.sa_mask);
+	// sigaddset(&sa.sa_mask, SIGUSR1);
+	// sigaddset(&sa.sa_mask, SIGUSR2);
+	sigfillset(&sa.sa_mask);
 	if (sigaction(SIGUSR1, &sa, NULL) == -1 || sigaction(SIGUSR2, &sa, NULL) == -1)
 		ft_printf("Sigaction configuration error");
 }
@@ -113,10 +128,7 @@ int	main(void)
 	ft_printf("Ready to talk with client, PID = %d\n", getpid());
 	while (1)
 	{
-		//pause(); // wait for signal to reach server
 		receive_signals();
 		usleep(1);
-		// print_msg();
-		// notify_client();
 	}
 }
