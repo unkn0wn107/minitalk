@@ -6,25 +6,11 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:10:16 by agaley            #+#    #+#             */
-/*   Updated: 2023/05/01 22:02:38 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/05/01 22:53:52 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
-
-static int	ft_error(int code)
-{
-	char	*msg;
-
-	if (code == 1)
-		msg = "Erreur d'argument :\n./client (int)PID (char *)message";
-	if (code == 2)
-		msg = "Erreur sigemptyset ou signaddset";
-	if (code == 3)
-		msg = "Accusé de réception non reçu par le serveur";
-	ft_printf("%s\n", msg);
-	return (1);
-}
 
 void	transmit_byte(unsigned int byte, unsigned int bits, pid_t pid, const sigset_t *restrict set, int *restrict sig)
 {
@@ -33,7 +19,6 @@ void	transmit_byte(unsigned int byte, unsigned int bits, pid_t pid, const sigset
 
 	i = 0;
 	ft_itobarr(byte, bits, bin);
-	ft_printf("%s\n", bin);
 	while (i < bits)
 	{
 		if (bin[i] == '0')
@@ -62,6 +47,6 @@ int	main(int argc, char **argv)
 	pid = ft_atoi(argv[1]);
 	transmit_byte(len, 32, pid, &set, &sig);
 	while (i < len)
-		transmit_byte(argv[2][i++], 8, pid, &set, &sig);
+		transmit_byte((unsigned char)argv[2][i++], 8, pid, &set, &sig);
 	return (0);
 }

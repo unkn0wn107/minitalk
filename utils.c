@@ -6,42 +6,22 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:02:35 by agaley            #+#    #+#             */
-/*   Updated: 2023/04/30 22:02:40 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/05/01 22:50:40 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-/**
- * Get the buffer corresponding to the pid in an array of buffers.
- * If not found, create a new buffer for this pid.
- *
- * @param buff The buffers array to seek.
- * @param pid The pid of the buffer to seek.
- *
- * @returns t_buff buffer corresponding to the pid, or NULL upon error
- **/
-t_buff	*ft_getbuff(t_stack *stack, int pid)
+int	ft_error(int code)
 {
-	t_node	*node;
-	t_buff	*buff;
+	char	*msg;
 
-	node = stack->head;
-	while (node->next)
-	{
-		buff = node->addr;
-		if (buff->pid == pid)
-			return (buff);
-		node = stack->head;
-	}
-	buff = node->addr;
-	if (buff->pid == pid)
-		return (buff);
-	buff = malloc_n_collect(stack, sizeof(t_buff));
-	if (!buff)
-		return (NULL);
-	buff->pid = pid;
-	return (buff);
+	if (code == 1)
+		msg = "Erreur d'argument :\n./client (int)PID (char *)message";
+	if (code == 2)
+		msg = "Erreur sigemptyset ou signaddset";
+	ft_printf("%s\n", msg);
+	return (1);
 }
 
 /**
@@ -57,10 +37,9 @@ t_buff	*ft_cleanbuff(t_buff *buff)
 		free(buff->str);
 	buff->str = NULL;
 	buff->len = 0;
-	buff->pid = 0;
 	i = 0;
 	while (i < 33)
-		buff->byte[i++] = '\0';
+		buff->byte[i++] = 0;
 	return (buff);
 }
 
