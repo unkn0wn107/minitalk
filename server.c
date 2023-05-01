@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:06:21 by agaley            #+#    #+#             */
-/*   Updated: 2023/05/01 22:54:21 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/05/02 00:45:46 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static int	receive_signals()
 
 int	main(void)
 {
-	ft_printf("Ready to talk with client, PID = %d\n", getpid());
+	ft_printf("Ready to print from clients, PID = %d\n", getpid());
 	while (1)
 	{
 		if (receive_signals() == 1)

@@ -6,60 +6,66 @@
 #    By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/11 00:01:07 by agaley            #+#    #+#              #
-#    Updated: 2023/04/30 22:06:32 by agaley           ###   ########lyon.fr    #
+#    Updated: 2023/05/02 00:48:27 by agaley           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
-SRV = server
-CLT = client
+NAME = minitalk
+SERVER = server
+CLIENT = client
 
-SRCS = server.c
-SRCC = client.c
-UTIL = utils.c
+SRC_SRV = server.c
+SRC_CLT = client.c
+SRC_UTL = utils.c
 
-LIBFT = libft/libft.a
+LIBFT = libft
 LIBFT_FLAGS = -Llibft -lft
 MAKE_LIBFT = make -C libft
 MAKEFLAGS += --no-print-directory
 
-OBS = server.o
-OBC = client.o
-OBU = utils.o
+OBJ_SRV = server.o
+OBJ_CLT = client.o
+OBJ_UTL = utils.o
 
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -O2
 CC = gcc
 
-all:	${SRV} ${CLT}
+all:			${NAME}
 
-${LIBFT}:
-		$(MAKE_LIBFT)
+${NAME}:		${SERVER} ${CLIENT}
 
-${OBU}:	${UTIL} ${H} ${LIBFT} Makefile
-		${CC} ${CFLAGS} ${UTIL} -c
+${LIBFT}:		FORCE
+			$(MAKE_LIBFT)
 
-${OBS}:	${SRCS} ${H} ${LIBFT} Makefile
-		${CC} ${CFLAGS} ${SRCS} -c
+FORCE: ;
 
-${SRV}: ${OBU} ${OBS}
-		${CC} ${CFLAGS} ${OBU} ${OBS} -o ${SRV} ${LIBFT_FLAGS}
+${OBJ_UTL}:		${SRC_UTL} ${H} Makefile
+			${CC} ${CFLAGS} ${SRC_UTL} -c
 
-${OBC}:	${SRCC} ${H} ${LIBFT} Makefile
-		${CC} ${CFLAGS} ${SRCC} -c
+${OBJ_SRV}:		${SRC_SRV} ${H} Makefile
+			${CC} ${CFLAGS} ${SRC_SRV} -c
 
-${CLT}: ${OBU} ${OBC}
-		${CC} ${CFLAGS} ${OBU} ${OBC} -o ${CLT} ${LIBFT_FLAGS}
+${SERVER}: 	${LIBFT} ${OBJ_UTL} ${OBJ_SRV}
+			${CC} ${CFLAGS} ${OBJ_UTL} ${OBJ_SRV} -o $@ ${LIBFT_FLAGS}
+
+${OBJ_CLT}:		${SRC_CLT} ${H} Makefile
+			${CC} ${CFLAGS} ${SRC_CLT} -c
+
+${CLIENT}: 	${LIBFT} ${OBJ_UTL} ${OBJ_CLT}
+			${CC} ${CFLAGS} ${OBJ_UTL} ${OBJ_CLT} -o $@ ${LIBFT_FLAGS}
 
 clean:
 		$(MAKE_LIBFT) $@
-		find . -name "${OBS}" -delete
-		find . -name "${OBC}" -delete
+		find . -name "${OBJ_SRV}" -delete
+		find . -name "${OBJ_CLT}" -delete
+		find . -name "${OBJ_UTL}" -delete
 		find . -name "*.gch" -delete
 
 fclean:	clean
 		$(MAKE_LIBFT) $@
-		find . -name "${SRV}" -delete
-		find . -name "${CLT}" -delete
+		find . -name "${SERVER}" -delete
+		find . -name "${CLIENT}" -delete
 
 re:		fclean all
 
-.PHONY:	all libft clean fclean re
+.PHONY:	all clean fclean re
