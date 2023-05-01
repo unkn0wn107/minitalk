@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:10:23 by agaley            #+#    #+#             */
-/*   Updated: 2023/04/30 22:02:54 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/04/30 22:29:42 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef struct s_buff
 	unsigned char	*str;
 }t_buff;
 
-t_buff			*ft_getbuff(t_stack *stack, int pid);
 t_buff			*ft_cleanbuff(t_buff *buff);
 unsigned char	ft_btouchar(unsigned char *barr);
 unsigned int	ft_btoi32(unsigned char *barr);

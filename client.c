@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:10:16 by agaley            #+#    #+#             */
-/*   Updated: 2023/04/30 21:29:14 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/05/01 22:02:38 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ void	transmit_byte(unsigned int byte, unsigned int bits, pid_t pid, const sigset
 	size_t		i;
 
 	i = 0;
-	ft_itobarr(byte, bits + 1, bin);
+	ft_itobarr(byte, bits, bin);
 	ft_printf("%s\n", bin);
-	while (i < bits + 1)
+	while (i < bits)
 	{
 		if (bin[i] == '0')
 			kill(pid, SIGUSR1);

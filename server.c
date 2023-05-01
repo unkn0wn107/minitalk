@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:06:21 by agaley            #+#    #+#             */
-/*   Updated: 2023/04/30 22:09:24 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/05/01 21:42:37 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	clean_byte(unsigned char *byte, size_t len)
 
 	i = 0;
 	while (i < len)
-		byte[i++] = '\0';
+		byte[i++] = 0;
 }
 
 static void	receive_byte(unsigned char *byte, int signum)
@@ -75,35 +75,25 @@ static void	set_length(t_buff *buff, int signum)
 
 static void	handler(int signum, siginfo_t *info, void *context)
 {
-	static t_stack	*stack;
-	t_buff			*buff;
-	size_t			msglen;
+	static t_buff	buff;
 
 	(void)context;
-	if (!stack)
-		stack = stack_init();
-	if (!stack)
-		ft_printf("Stack initialization error");
-	buff = ft_getbuff(stack, info->si_pid);
-	ft_printf("Buffer initialized\n");
-	if (!buff)
-		ft_printf("Buffer initialization error");
-	if (!buff->str)
-		set_length(buff, signum);
-	// ft_printf("%d\n", l);
-	// if (l == 32 || ((l == 8 || l == 16 || l == 24) && signum == SIGUSR1))
-	msglen = ft_ustrlen(buff->str);
-	if (msglen == buff->len)
+	if (!buff.str)
+		set_length(&buff, signum);
+	if (buff.str)
 	{
-		ft_printf("%s\n", buff->str);
-		ft_cleanbuff(buff);
-		return ;
-	}
-	receive_byte(buff->byte, signum);
-	if (ft_ustrlen(buff->byte) == 8)
-	{
-		buff->str[msglen] = ft_btouchar(buff->byte);
-		clean_byte(buff->byte, 9);
+		receive_byte(buff.byte, signum);
+		if (ft_ustrlen(buff.byte) == 8)
+		{
+			buff.str[ft_ustrlen(buff.str)] = ft_btouchar(buff.byte);
+			clean_byte(buff.byte, 9);
+		}
+		// ft_printf("msglen: %d\n", msglen);
+		if (ft_ustrlen(buff.str) == buff.len)
+		{
+			ft_printf("%s\n", buff.str);
+			ft_cleanbuff(&buff);
+		}
 	}
 	kill(info->si_pid, SIGUSR1);
 	// ft_printf("Pong to %d\n", info->si_pid);
