@@ -1,0 +1,9 @@
+main_*
+libftTester/
+*.o
+*.a
+*.so
+*.out
+*.gch
+.vscode
+.notes
