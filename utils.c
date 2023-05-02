@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:02:35 by agaley            #+#    #+#             */
-/*   Updated: 2023/05/01 22:50:40 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/05/02 02:21:47 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,38 +37,45 @@ t_buff	*ft_cleanbuff(t_buff *buff)
 		free(buff->str);
 	buff->str = NULL;
 	buff->len = 0;
+	buff->cur = 0;
 	i = 0;
 	while (i < 33)
 		buff->byte[i++] = 0;
 	return (buff);
 }
 
-unsigned char	ft_btouchar(unsigned char *barr)
+void	clean_byte(char *byte, size_t bits)
 {
-	size_t			i;
-	unsigned char	c;
+	size_t	i;
 
 	i = 0;
-	c = 0;
-	while (barr[i])
-	{
-		c += (barr[i] - '0') * ft_pow(2, 7 - i);
-		i++;
-	}
-	return (c);
+	while (i < bits + 1)
+		byte[i++] = 0;
 }
 
-unsigned int	ft_btoi32(unsigned char *barr)
+void	receive_byte(char *byte, int signum)
 {
-	size_t			i;
-	unsigned int	c;
+	size_t	l;
 
-	i = 0;
-	c = 0;
-	while (barr[i])
+	l = ft_strlen(byte);
+	if (signum == SIGUSR1)
+		byte[l] = '0';
+	else if (signum == SIGUSR2)
+		byte[l] = '1';
+}
+
+void	set_length(t_buff *buff, int signum)
+{
+	size_t	l;
+
+	l = ft_strlen(buff->byte);
+	if (l == 32)
 	{
-		c += (barr[i] - '0') * ft_pow(2, 31 - i);
-		i++;
+		buff->len = ft_btoi(buff->byte);
+		buff->str = malloc(sizeof(unsigned char) * buff->len + 1);
+		ft_bzero(buff->str, buff->len + 1);
+		clean_byte(buff->byte, 32);
+		return ;
 	}
-	return (c);
+	receive_byte(buff->byte, signum);
 }
