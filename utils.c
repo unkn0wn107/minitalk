@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:02:35 by agaley            #+#    #+#             */
-/*   Updated: 2023/05/02 02:21:47 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/05/04 00:12:20 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ int	ft_error(int code)
 	char	*msg;
 
 	if (code == 1)
-		msg = "Erreur d'argument :\n./client (int)PID (char *)message";
+		msg = "Arg error :\n./client (int)PID (char *)message";
 	if (code == 2)
-		msg = "Erreur sigemptyset ou signaddset";
+		msg = "Signal initialization error";
+	if (code == 3)
+		msg = "Memory allocation error";
 	ft_printf("%s\n", msg);
 	return (1);
 }
@@ -73,7 +75,6 @@ void	set_length(t_buff *buff, int signum)
 	{
 		buff->len = ft_btoi(buff->byte);
 		buff->str = malloc(sizeof(unsigned char) * buff->len + 1);
-		ft_bzero(buff->str, buff->len + 1);
 		clean_byte(buff->byte, 32);
 		return ;
 	}
