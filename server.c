@@ -6,7 +6,7 @@
 /*   By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/11 00:06:21 by agaley            #+#    #+#             */
-/*   Updated: 2023/05/04 00:41:32 by agaley           ###   ########lyon.fr   */
+/*   Updated: 2023/05/08 22:47:11 by agaley           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static void	handler(int signum, siginfo_t *info, void *context)
 		if (ft_strlen(buff.byte) == 8)
 		{
 			buff.str[buff.cur] = (unsigned char)ft_btoi(buff.byte);
+			buff.str[buff.len] = '\0';
 			clean_byte(buff.byte, 8);
 			buff.cur++;
 		}
