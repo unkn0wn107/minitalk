@@ -6,7 +6,7 @@
 #    By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/11 00:01:07 by agaley            #+#    #+#              #
-#    Updated: 2023/05/08 01:15:58 by agaley           ###   ########lyon.fr    #
+#    Updated: 2023/05/08 22:55:20 by agaley           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ CLIENT = client
 SRC_SRV = server.c
 SRC_CLT = client.c
 SRC_UTL = utils.c
+H = minitalk.h
 
 LIBFT = libft
 LIBFT_FLAGS = -Llibft -lft
