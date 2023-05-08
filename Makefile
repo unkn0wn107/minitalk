@@ -6,7 +6,7 @@
 #    By: agaley <agaley@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/11 00:01:07 by agaley            #+#    #+#              #
-#    Updated: 2023/05/02 00:48:27 by agaley           ###   ########lyon.fr    #
+#    Updated: 2023/05/08 01:15:58 by agaley           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ OBJ_SRV = server.o
 OBJ_CLT = client.o
 OBJ_UTL = utils.o
 
-CFLAGS = -Wall -Wextra -Werror -O2
+CFLAGS = -Wall -Wextra -Werror -pipe
 CC = gcc
 
 all:			${NAME}
